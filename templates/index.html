@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CommBank Pocket — Investment Dashboard</title>
+<link rel="stylesheet" href="/static/style.css?v=20" />
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="logo">●</span>
+    <h1>Pocket Advisor</h1>
+    <span class="tag">CommBank Pocket — DCA dashboard</span>
+  </div>
+  <div class="topbar-actions">
+    <span id="last-updated" class="muted">Not yet loaded</span>
+    <button id="refresh-btn" class="btn primary">↻ Refresh prices</button>
+  </div>
+</header>
+
+<main>
+
+  <!-- INPUT PANEL -->
+  <section class="panel">
+    <h2>Your plan</h2>
+    <div class="inputs">
+      <label>
+        Weekly contribution (AUD)
+        <input id="in-weekly" type="number" min="0" step="50" value="1000" />
+      </label>
+      <label>
+        Target annual return (%)
+        <input id="in-target" type="number" min="0" max="30" step="0.5" value="10" />
+      </label>
+      <label>
+        Horizon (years)
+        <input id="in-years" type="number" min="1" max="40" step="1" value="10" />
+      </label>
+      <button id="recalc-btn" class="btn">Recalculate</button>
+    </div>
+  </section>
+
+  <!-- HEADLINE METRICS -->
+  <section class="metrics">
+    <div class="metric-card">
+      <div class="metric-label">Total invested over horizon</div>
+      <div class="metric-value" id="m-contributed">—</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Projected balance</div>
+      <div class="metric-value highlight" id="m-final">—</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Investment growth</div>
+      <div class="metric-value good" id="m-growth">—</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Money multiplier</div>
+      <div class="metric-value" id="m-mult">—</div>
+    </div>
+  </section>
+
+  <!-- PROJECTION CHART -->
+  <section class="panel">
+    <div class="panel-head">
+      <h2>Wealth projection — $<span id="proj-weekly">1,000</span>/week @ <span id="proj-return">10</span>% p.a.</h2>
+      <span class="muted">Future-value annuity, weekly compounding</span>
+    </div>
+    <canvas id="proj-chart" height="220"></canvas>
+  </section>
+
+  <!-- CURRENT HOLDINGS -->
+  <section class="panel">
+    <div class="panel-head">
+      <h2>Your current holdings</h2>
+      <span class="muted">Enter units and average purchase price — values and returns track market prices</span>
+    </div>
+    <div class="pick-controls">
+      <label>
+        Following portfolio
+        <select id="pick-portfolio">
+          <option value="custom" selected>Custom Pocket Mix</option>
+          <option value="0">Conservative (~7%)</option>
+          <option value="1">Balanced (~9%)</option>
+          <option value="2">Growth (~11%)</option>
+          <option value="3">Aggressive (~13%)</option>
+        </select>
+      </label>
+      <button id="export-holdings" class="btn ghost">Save CSV</button>
+      <button id="import-holdings-btn" class="btn ghost">Open CSV</button>
+      <input id="import-holdings-file" type="file" accept=".csv,text/csv" hidden />
+      <button id="clear-holdings" class="btn ghost">Clear all units</button>
+    </div>
+    <div id="custom-portfolio-editor"></div>
+    <div id="holdings-input"></div>
+    <div id="holdings-totals" class="holdings-totals"></div>
+  </section>
+
+  <!-- THIS WEEK'S PICK -->
+  <section class="panel pick-panel">
+    <div class="panel-head">
+      <h2>This week's buy — one fund only</h2>
+      <span class="muted">Balances target drift, your purchase price, and live market signals</span>
+    </div>
+    <div id="pick-card"></div>
+  </section>
+
+  <!-- PORTFOLIO RECOMMENDATIONS -->
+  <section class="panel">
+    <div class="panel-head">
+      <h2>Model portfolios</h2>
+      <span class="muted">Calibrated using 5-year CAGR & volatility from live data</span>
+    </div>
+    <div id="portfolios" class="portfolio-grid"></div>
+  </section>
+
+  <!-- LIVE PRICES -->
+  <section class="panel">
+    <div class="panel-head">
+      <h2>CBA Pocket ETF prices</h2>
+      <span class="muted">Market prices for the 10 Pocket ETF options available in the CommBank app</span>
+    </div>
+    <div id="funds" class="fund-grid"></div>
+  </section>
+
+  <!-- ADVICE / INSIGHTS -->
+  <section class="panel">
+    <h2>Smart insights</h2>
+    <ul id="insights" class="insights"></ul>
+  </section>
+
+  <footer class="disclaimer">
+    <strong>Disclaimer:</strong> This dashboard is for educational use only and does not constitute personal
+    financial advice. CommBank Pocket invests in the listed ETFs shown above; data is sourced from public markets via
+    Yahoo Finance and may be delayed by 15–20 minutes. Past performance does not predict future returns. Consult a
+    licensed financial adviser before making investment decisions.
+  </footer>
+
+</main>
+
+<script src="/static/dashboard.js?v=20"></script>
+</body>
+</html>
